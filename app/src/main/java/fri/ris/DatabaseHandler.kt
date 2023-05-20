@@ -53,10 +53,9 @@ class DatabaseHandler(context: Context) :
                 + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_EMAIL + " TEXT,"+ KEY_USERNAME +" TEXT,"
                 + KEY_PASS +" TEXT,"+ KEY_IS_ADMIN + " BOOLEAN," + KEY_PROFILE_IMAGE +" TEXT)")
 
-        val CREATE_ITEMS_TABLE = ("CREATE TABLE" + TABLE_ITEMS + " (" + KEY_ITEM_ID
+        val CREATE_ITEMS_TABLE = ("CREATE TABLE " + TABLE_ITEMS + " (" + KEY_ITEM_ID
                 + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_ITEM_NAME + " TEXT," + KEY_ITEM_DESC
-                + " TEXT," + KEY_ITEM_PRICE + " NUMERIC," + KEY_ITEM_STOCK + " INTEGER," + KEY_ITEM_IMAGE + " TEXT, ADDED_BY INTEGER," +
-                "FOREIGN KEY(USER_ID) REFERENCES" + TABLE_USERS + "(USER_ID))")
+                + " TEXT," + KEY_ITEM_PRICE + " NUMERIC," + KEY_ITEM_STOCK + " INTEGER," + KEY_ITEM_IMAGE + " TEXT)")
 
         val CREATE_CREDIT_CARDS_TABLE = ("CREATE TABLE " + TABLE_CREDIT_CARDS + " (" + KEY_CC_NUMBER
                 + " TEXT PRIMARY KEY," + KEY_CC_CCV + " INTEGER," + KEY_CC_BALANCE + " NUMERIC)")
@@ -91,6 +90,39 @@ class DatabaseHandler(context: Context) :
 
         db.close()
         return success
+    }
+
+    fun loginUser(username: String, password: String) : UserModelClass {
+        val db = this.readableDatabase
+        val sql = "SELECT * FROM $TABLE_USERS WHERE $KEY_USERNAME = '$username'"
+
+        var user = UserModelClass(0,"","","",false,"")
+        val cursor = db.rawQuery(sql, null)
+
+        if (cursor != null && cursor.moveToFirst()){
+            do {
+                val idIndex = cursor.getColumnIndex(KEY_USER_ID)
+                val usernameIndex = cursor.getColumnIndex(KEY_USERNAME)
+                val mailIndex = cursor.getColumnIndex(KEY_EMAIL)
+                val passwordIndex = cursor.getColumnIndex(KEY_PASS)
+                val imageIndex = cursor.getColumnIndex(KEY_PROFILE_IMAGE)
+                val adminIndex = cursor.getColumnIndex(KEY_IS_ADMIN)
+
+                if (username == cursor.getString(usernameIndex)){
+                    if (password == cursor.getString(passwordIndex)){
+                        val id = if (idIndex != -1) cursor.getInt(idIndex) else -1
+                        val username = if (usernameIndex != -1) cursor.getString(usernameIndex) else ""
+                        val image = if (imageIndex != -1) cursor.getString(imageIndex) else ""
+
+                        user = UserModelClass(id = 1, email = "", username = username, pass = "", is_admin = false, image = image)
+                    }
+                }
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return user
     }
 
     fun addItem (item: ItemModelClass) : Long {
@@ -180,6 +212,7 @@ class DatabaseHandler(context: Context) :
                 item = ItemModelClass(id = id, name = name, desc = desc, price = price, image = image, stock = stock)
             } while (cursor.moveToNext())
         }
+
 
         cursor?.close()
         db.close()
