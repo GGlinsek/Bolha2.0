@@ -27,14 +27,6 @@ class MainActivity : AppCompatActivity(), ItemDialog.ItemDialogListener {
 
         addItemList()
 
-
-        val isItemsEmpty = databaseHandler.isItemsTableEmpty()
-
-        if (isItemsEmpty) {
-            databaseHandler.addItemEntries()
-        }
-
-
         btnkosarica.setOnClickListener {
             val intent  = Intent(this, KosaricaActivity::class.java)
             intent.putIntegerArrayListExtra("IDS", ArrayList(ids))

@@ -24,7 +24,11 @@ class LoginActivity : AppCompatActivity () {
         val password = findViewById<EditText>(R.id.et_password)
         val loginBtn = findViewById<Button>(R.id.btn_login)
 
+        val isItemsEmpty = databaseHandler.isItemsTableEmpty()
 
+        if (isItemsEmpty) {
+            databaseHandler.addItemEntries()
+        }
 
         loginBtn.setOnClickListener {
             val user = databaseHandler.loginUser(username.text.toString(),password.text.toString())

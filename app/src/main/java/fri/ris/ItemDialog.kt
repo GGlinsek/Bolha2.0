@@ -7,11 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import java.io.File
@@ -54,6 +50,7 @@ class ItemDialog: DialogFragment() {
 
         btnVKosarico.setOnClickListener {
             arguments?.getInt("ID")?.let { it1 -> listener?.onItemDataProvided(it1,kolicina.text.toString().toInt()) }
+            Toast.makeText(requireContext(),"Izdelek dodan v košarico", Toast.LENGTH_SHORT).show()
             dismiss()
         }
 

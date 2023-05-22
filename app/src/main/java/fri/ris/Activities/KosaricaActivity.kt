@@ -3,10 +3,7 @@ package fri.ris.Activities
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import fri.ris.DatabaseHandler
 import fri.ris.ItemDialog
@@ -46,6 +43,7 @@ class KosaricaActivity: AppCompatActivity() {
         val receivedIds = intent.getIntegerArrayListExtra("IDS")
         val receivedKolicine = intent.getIntegerArrayListExtra("KOLICINE")
         val tvSkupaj = findViewById<TextView>(R.id.tv_skupaj)
+        val btnPlacilo = findViewById<Button>(R.id.btn_koncaj)
         skupaj = 0.0
         addItemList(receivedIds, receivedKolicine)
 
@@ -55,6 +53,11 @@ class KosaricaActivity: AppCompatActivity() {
         }
 
         skupaj = skupaj
+
+        btnPlacilo.setOnClickListener {
+            Toast.makeText(applicationContext,"funkcija ni dodana",Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     fun formatNumberWithDecimalPlaces(number: Double, decimalPlaces: Int): String {
